@@ -12,24 +12,30 @@ PKG_COMMIT:=$(shell git -C $(PKG_GIT_REPO_ROOT) rev-parse HEAD 2>/dev/null)
 # Use commit date for an APK-compatible package version
 PKG_VERSION:=$(shell git -C $(PKG_GIT_REPO_ROOT) show -s --format=%cd --date=format:%Y.%m.%d $(PKG_COMMIT) 2>/dev/null)
 
-# Use the full commit SHA as source version
+# Upstream repository
 PKG_SOURCE_URL:=https://github.com/NilsRo/usteer-ng.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=$(PKG_COMMIT)
 
+# Get latest upstream tag
+PKG_LATEST_TAG:=$(shell git ls-remote --tags --refs $(PKG_SOURCE_URL) | awk '{print $$2}' | sed 's|refs/tags/||' | sort -V | tail -n 1)
+
+# Resolve upstream tag to commit
+PKG_SOURCE_VERSION:=$(shell git ls-remote $(PKG_SOURCE_URL) refs/tags/$(PKG_LATEST_TAG) | awk '{print $$1}')
+
+# Package version
+PKG_VERSION:=$(PKG_LATEST_TAG)
 PKG_RELEASE:=1
 
 PKG_HASH:=skip
 PKG_SOURCE_HASH:=skip
 PKG_MIRROR_HASH:=skip
 
-$(info ===== usteer-ng package version diagnostics =====)
-$(info PKG_GIT_REPO_ROOT='$(PKG_GIT_REPO_ROOT)')
-$(info PKG_COMMIT='$(PKG_COMMIT)')
-$(info PKG_VERSION='$(PKG_VERSION)')
+$(info ===== usteer-ng version diagnostics =====)
+$(info PKG_SOURCE_URL='$(PKG_SOURCE_URL)')
+$(info PKG_LATEST_TAG='$(PKG_LATEST_TAG)')
 $(info PKG_SOURCE_VERSION='$(PKG_SOURCE_VERSION)')
-$(info PKG_RELEASE='$(PKG_RELEASE)')
-$(info ================================================)
+$(info PKG_VERSION='$(PKG_VERSION)')
+$(info ========================================)
 
 PKG_MAINTAINER:=Nils Hendrik Rottgardt <n.rottgardt@gmail.com>
 PKG_LICENSE:=GPL-2.0-only
