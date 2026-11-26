@@ -16,14 +16,11 @@ PKG_VERSION:=$(shell git -C $(PKG_GIT_REPO_ROOT) show -s --format=%cd --date=for
 PKG_SOURCE_URL:=https://github.com/NilsRo/usteer-ng.git
 PKG_SOURCE_PROTO:=git
 
-# Get latest upstream tag
 PKG_LATEST_TAG:=$(shell git ls-remote --tags --refs $(PKG_SOURCE_URL) | awk '{print $$2}' | sed 's|refs/tags/||' | sort -V | tail -n 1)
 
-# Resolve upstream tag to commit
 PKG_SOURCE_VERSION:=$(shell git ls-remote $(PKG_SOURCE_URL) refs/tags/$(PKG_LATEST_TAG) | awk '{print $$1}')
 
-# Package version
-PKG_VERSION:=$(PKG_LATEST_TAG)
+PKG_VERSION:=$(patsubst usteer-ng-%,%,$(PKG_LATEST_TAG))
 PKG_RELEASE:=1
 
 PKG_HASH:=skip
