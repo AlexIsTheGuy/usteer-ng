@@ -18,9 +18,13 @@ PKG_SOURCE_PROTO:=git
 
 PKG_LATEST_TAG:=$(shell git ls-remote --tags --refs $(PKG_SOURCE_URL) | awk '{print $$2}' | sed 's|refs/tags/||' | sort -V | tail -n 1)
 
-PKG_SOURCE_VERSION:=$(shell git ls-remote $(PKG_SOURCE_URL) refs/tags/$(PKG_LATEST_TAG) | awk '{print $$1}')
+# PKG_SOURCE_VERSION:=$(shell git ls-remote $(PKG_SOURCE_URL) refs/tags/$(PKG_LATEST_TAG) | awk '{print $$1}')
 
-PKG_VERSION:=$(patsubst usteer-ng-%,%,$(PKG_LATEST_TAG))
+# PKG_VERSION:=$(patsubst usteer-ng-%,%,$(PKG_LATEST_TAG))
+# PKG_RELEASE:=1
+
+PKG_SOURCE_VERSION:=1.0.2
+PKG_VERSION:=1.0.2
 PKG_RELEASE:=1
 
 PKG_HASH:=skip
